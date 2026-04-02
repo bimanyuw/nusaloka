@@ -26,6 +26,24 @@ type TooltipState = {
   y: number;
 } | null;
 
+type GeoProperties = {
+  name?: string;
+  NAME_1?: string;
+  PROVINSI?: string;
+  Propinsi?: string;
+  province?: string;
+  [key: string]: unknown;
+};
+
+type MapGeo = {
+  rsmKey: string;
+  properties?: GeoProperties;
+};
+
+type GeographiesRenderProps = {
+  geographies: MapGeo[];
+};
+
 const provinceAnchors: Record<string, { x: number; y: number }> = {
   lampung: { x: 20, y: 66 },
   "dki jakarta": { x: 26, y: 64 },
@@ -42,13 +60,15 @@ function normalizeName(value: string) {
   return value.toLowerCase().replace(/_/g, " ").trim();
 }
 
-function getGeoProvinceName(geo: any) {
+function getGeoProvinceName(geo: MapGeo): string {
+  const props = geo.properties ?? {};
+
   return (
-    geo?.properties?.name ||
-    geo?.properties?.NAME_1 ||
-    geo?.properties?.PROVINSI ||
-    geo?.properties?.Propinsi ||
-    geo?.properties?.province ||
+    (typeof props.name === "string" && props.name) ||
+    (typeof props.NAME_1 === "string" && props.NAME_1) ||
+    (typeof props.PROVINSI === "string" && props.PROVINSI) ||
+    (typeof props.Propinsi === "string" && props.Propinsi) ||
+    (typeof props.province === "string" && props.province) ||
     "Unknown"
   );
 }
@@ -131,9 +151,11 @@ export default function IndonesiaMap({
             Indonesia-wide supply readiness view
           </h2>
           <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
-            Hover provinsi untuk melihat info card yang mengikuti cursor. Klik wilayah untuk pin detail secara permanen dan jadikan area itu fokus analisis.
+            Hover provinsi untuk melihat info card yang mengikuti cursor. Klik wilayah
+            untuk pin detail secara permanen dan jadikan area itu fokus analisis.
           </p>
         </div>
+
         <div className="flex flex-wrap gap-2">
           <span className="rounded-full border border-[rgba(37,63,176,0.10)] bg-[#edf2ff] px-4 py-2 text-xs font-semibold text-[#1d2f9b]">
             Full-width map canvas
@@ -164,6 +186,7 @@ export default function IndonesiaMap({
                 <stop offset="100%" stopColor="#49bfd1" stopOpacity="0.88" />
               </linearGradient>
             </defs>
+
             <path
               d={`M ${routePoints.from.x} ${routePoints.from.y} Q ${routePoints.midX} ${routePoints.midY} ${routePoints.to.x} ${routePoints.to.y}`}
               fill="none"
@@ -185,8 +208,8 @@ export default function IndonesiaMap({
           className="relative z-20 h-full w-full"
         >
           <Geographies geography={geoUrl}>
-            {({ geographies }) =>
-              geographies.map((geo) => {
+            {({ geographies }: GeographiesRenderProps) =>
+              geographies.map((geo: MapGeo) => {
                 const provinceName = getGeoProvinceName(geo);
                 const matchedKey = resolveProvinceKey(provinceName, provinceData);
                 const province = provinceData[matchedKey];
@@ -195,10 +218,12 @@ export default function IndonesiaMap({
                   <Geography
                     key={geo.rsmKey}
                     geography={geo}
-                    onMouseEnter={(event) => {
+                    onMouseEnter={(event: React.MouseEvent<SVGPathElement>) => {
                       setHoveredProvince(provinceName);
+
                       if (!containerRef.current) return;
                       const rect = containerRef.current.getBoundingClientRect();
+
                       setTooltip({
                         province: provinceName,
                         score: province?.score ?? 70,
@@ -207,9 +232,10 @@ export default function IndonesiaMap({
                         y: event.clientY - rect.top,
                       });
                     }}
-                    onMouseMove={(event) => {
+                    onMouseMove={(event: React.MouseEvent<SVGPathElement>) => {
                       if (!containerRef.current) return;
                       const rect = containerRef.current.getBoundingClientRect();
+
                       setTooltip((prev) =>
                         prev
                           ? {
@@ -282,14 +308,17 @@ export default function IndonesiaMap({
             }}
           >
             <p className="text-sm font-semibold text-slate-900">{tooltip.province}</p>
+
             <div className="mt-3 flex items-center justify-between gap-3 text-xs">
               <span className="rounded-full bg-[#eef3ff] px-3 py-1.5 font-semibold text-[#1d2f9b]">
                 {tooltip.status}
               </span>
               <span className="font-semibold text-slate-700">Score {tooltip.score}</span>
             </div>
+
             <p className="mt-3 text-xs leading-6 text-slate-500">
-              Hover card akan mengikuti cursor. Klik provinsi untuk pin detail ke panel permanen.
+              Hover card akan mengikuti cursor. Klik provinsi untuk pin detail ke panel
+              permanen.
             </p>
           </div>
         ) : null}
@@ -301,12 +330,16 @@ export default function IndonesiaMap({
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#3558df]">
                   Pinned Detail
                 </p>
-                <h3 className="mt-2 text-lg font-semibold text-slate-900">{selectedProvince}</h3>
+                <h3 className="mt-2 text-lg font-semibold text-slate-900">
+                  {selectedProvince}
+                </h3>
               </div>
+
               <span className="rounded-full bg-[#edf8f1] px-3 py-1 text-xs font-semibold text-emerald-700">
                 {pinnedProvinceData.score}
               </span>
             </div>
+
             <p className="mt-3 text-sm leading-6 text-slate-600">
               {pinnedProvinceData.recommendation}
             </p>
