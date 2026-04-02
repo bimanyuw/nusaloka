@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "NUSALOKA | AI Food Supply Intelligence",
+  title: "NUSALOKA | Adaptive Food Intelligence",
   description:
-    "Interactive Indonesian food supply intelligence dashboard for NUSALOKA.",
+    "Interactive food allocation, substitution, policy simulation, and supply risk dashboard for NUSALOKA.",
 };
 
 export default function RootLayout({

@@ -3,14 +3,17 @@
 :root {
   --background: #ffffff;
   --foreground: #0f172a;
+  --muted: #5b6478;
+  --line: rgba(37, 63, 176, 0.12);
+  --card: rgba(255, 255, 255, 0.9);
   --findit-navy: #1d2f9b;
-  --findit-blue: #3057d5;
-  --findit-cyan: #2fb8c9;
-  --findit-green: #ddf24a;
-  --findit-yellow: #f8cb3c;
-  --findit-orange: #ff9c5f;
-  --findit-soft: #eef4ff;
-  --findit-border: rgba(29, 47, 155, 0.14);
+  --findit-blue: #3558df;
+  --findit-cyan: #49bfd1;
+  --findit-green: #dff38a;
+  --findit-yellow: #f7e7a7;
+  --findit-red: #f6b0ab;
+  --findit-orange: #ffb37a;
+  --findit-soft: #f4f7ff;
 }
 
 * {
@@ -23,24 +26,40 @@ html {
 
 html,
 body {
-  background:
-    radial-gradient(circle at top left, rgba(255, 156, 95, 0.18), transparent 20%),
-    radial-gradient(circle at top right, rgba(47, 184, 201, 0.16), transparent 22%),
-    linear-gradient(180deg, #ffffff 0%, #f9fbff 38%, #f4f7ff 100%);
+  margin: 0;
+  min-height: 100vh;
   color: var(--foreground);
+  background:
+    radial-gradient(circle at top left, rgba(255, 179, 122, 0.18), transparent 18%),
+    radial-gradient(circle at top right, rgba(73, 191, 209, 0.18), transparent 20%),
+    linear-gradient(180deg, #ffffff 0%, #fbfcff 42%, #f5f8ff 100%);
 }
 
 body {
-  margin: 0;
-  min-height: 100vh;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 ::selection {
-  background: rgba(48, 87, 213, 0.18);
+  background: rgba(53, 88, 223, 0.16);
   color: #0f172a;
 }
 
 .text-balance {
   text-wrap: balance;
+}
+
+.glass-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,250,255,0.92));
+  backdrop-filter: blur(14px);
+}
+
+.dashboard-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
 }
