@@ -202,8 +202,8 @@ export default function IndonesiaMap({
         <ComposableMap
           projection="geoMercator"
           projectionConfig={{
-            scale: 1180,
-            center: [118, -3],
+            scale: 1040,
+            center: [118, -2],
           }}
           className="relative z-20 h-full w-full"
         >
