@@ -935,7 +935,7 @@ export default function HomePage() {
                   </p>
                   <div className="mt-3 flex gap-2 text-[10px]">
                     <span className="rounded-full bg-white/70 px-2 py-0.5 text-slate-500">
-                      {alert.topCommodity}
+                      {alert.commodity}
                     </span>
                     <span
                       className={`rounded-full px-2 py-0.5 ${
